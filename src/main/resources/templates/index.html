@@ -3,8 +3,32 @@
 <head>
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 <body>
-<p>Hello World</p>
+<header>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Logo</a>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <p>Hello World</p>
+        </div>
+        <div class="col-6">
+            Col
+        </div>
+    </div>
+</div>
+<script th:src="@{/assets/jquery/jquery.min.js}"></script>
+<script th:src="@{/assets/js/bootstrap.min.js}"></script>
 </body>
 </html>
