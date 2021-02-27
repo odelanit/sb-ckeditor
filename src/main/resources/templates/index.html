@@ -4,15 +4,16 @@
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/assets/css/styles.css}" rel="stylesheet">
 </head>
 <body>
 <header>
     <nav class="navbar navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">Logo</a>
+            <a class="navbar-brand" href="#">Editor Demo</a>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="">Logout</a>
+                    <a class="nav-link" href="/logout">Logout</a>
                 </li>
             </ul>
         </div>
@@ -20,15 +21,24 @@
 </header>
 <div class="container">
     <div class="row">
-        <div class="col-6">
-            <p>Hello World</p>
-        </div>
-        <div class="col-6">
-            Col
+        <div class="col-12">
+            <div id="editor"></div>
         </div>
     </div>
 </div>
 <script th:src="@{/assets/jquery/jquery.min.js}"></script>
 <script th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/ckeditor/ckeditor.js}"></script>
+<script>
+    ClassicEditor.create(document.querySelector("#editor"), {
+        toolbar: ['bold', 'italic', 'link', 'undo', 'redo', 'numberedList', 'bulletedList']
+    })
+        .then(editor => {
+            console.log('Editor was initialized', editor)
+        })
+        .catch(error => {
+            console.error(error.stack)
+        })
+</script>
 </body>
 </html>
