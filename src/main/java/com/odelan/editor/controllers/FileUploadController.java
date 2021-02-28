@@ -18,15 +18,24 @@ public class FileUploadController {
     @Autowired
     private FileStorageService storageService;
 
-    @PostMapping("/upload")
+    @PostMapping("/editor-upload")
     @ResponseBody
-    public Map<String, Object> handleFileUpload(@RequestParam("upload") MultipartFile file) throws IOException {
+    public Map<String, Object> handleEditorFileUpload(@RequestParam("upload") MultipartFile file) throws IOException {
         HashMap<String, Object> map = new HashMap<>();
 
         FileDB fileDB = storageService.store(file);
 
         map.put("url", "/files/" + fileDB.getId());
         map.put("uploaded", true);
+        return map;
+    }
+
+    @PostMapping("/upload")
+    @ResponseBody
+    public Map<String, Object> handleFileUpload(@RequestParam("upload") MultipartFile file) throws IOException {
+        HashMap<String, Object> map = new HashMap<>();
+        FileDB fileDB = storageService.store(file);
+        map.put("file", fileDB);
         return map;
     }
 
