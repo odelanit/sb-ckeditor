@@ -136,7 +136,10 @@
                 url: `${window.location.href}/files`,
                 success: function (response) {
                     response.forEach(df => {
-                        let mockFile = {name: df.name};
+                        let mockFile = {
+                            name: df.name,
+                            id: df.id
+                        };
                         files.push(df.id);
                         myDropzone.emit("addedfile", mockFile);
                         myDropzone.emit("thumbnail", mockFile, '/files/' + df.id);
@@ -146,12 +149,12 @@
             })
         },
         removedfile: function (file) {
-            var data = JSON.parse(file.xhr.responseText)
+            var fileId = file.id || JSON.parse(file.xhr.responseText)
             $.ajax({
                 type: 'POST',
-                url: `/files/${data.file.id}?_csrf=${_token}`,
+                url: `/files/${fileId}?_csrf=${_token}`,
             });
-            var index = files.findIndex(f => f == data.file.id)
+            var index = files.findIndex(f => f == fileId)
             if (index >= 0) files.splice(index, 1);
             let _ref;
             return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;

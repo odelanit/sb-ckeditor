@@ -1,10 +1,13 @@
 package com.odelan.editor.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "files")
@@ -20,6 +23,10 @@ public class FileDB {
 
     @Lob
     private byte[] data;
+
+    @ManyToMany(mappedBy = "files")
+    @JsonIgnore
+    private Set<Post> posts;
 
     public FileDB() {
     }
@@ -71,5 +78,13 @@ public class FileDB {
 
     public void setUploadedAt(LocalDateTime uploadedAt) {
         this.uploadedAt = uploadedAt;
+    }
+
+    public Set<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Set<Post> posts) {
+        this.posts = posts;
     }
 }
