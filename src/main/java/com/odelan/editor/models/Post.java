@@ -23,7 +23,7 @@ public class Post {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateField;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinTable(name = "post_file", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "file_id"))
     private Set<FileDB> files;
 
