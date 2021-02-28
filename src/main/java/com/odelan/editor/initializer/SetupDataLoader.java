@@ -2,6 +2,7 @@ package com.odelan.editor.initializer;
 
 import com.odelan.editor.models.Role;
 import com.odelan.editor.models.User;
+import com.odelan.editor.repository.PostRepository;
 import com.odelan.editor.repository.RoleRepository;
 import com.odelan.editor.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +27,15 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private UserRepository userRepository;
 
     @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         if (alreadySetup) return;
+
         Role adminRole = createRoleIfNotFound("admin");
         Optional<User> optionalUser = userRepository.findByUsername("admin");
         if (!optionalUser.isPresent()) {
@@ -45,6 +50,8 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
             userRepository.save(user);
         }
+
+        postRepository.deleteAll();
 
         alreadySetup = true;
     }

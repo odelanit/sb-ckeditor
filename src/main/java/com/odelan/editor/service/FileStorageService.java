@@ -31,6 +31,6 @@ public class FileStorageService {
     }
 
     public void init() {
-//        fileDBRepository.deleteAll();
+        fileDBRepository.deleteAll();
     }
 }
