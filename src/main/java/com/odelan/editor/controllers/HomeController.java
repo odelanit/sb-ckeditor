@@ -10,8 +10,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Controller
 public class HomeController {
@@ -79,6 +83,14 @@ public class HomeController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
+        Post post = postRepository.findById(id).get();
+        String editorField = post.getEditorField();
+        List<String> imgSources = this.getImgSrc(editorField);
+        for (String imgSrc : imgSources) {
+            String[] strings = imgSrc.split("/files/");
+            String uuid = strings[1];
+            fileDBRepository.deleteById(uuid);
+        }
         postRepository.deleteById(id);
         return "redirect:/";
     }
@@ -100,5 +112,32 @@ public class HomeController {
         HashMap<String, String> map = new HashMap<>();
         map.put("message", "Deleted");
         return map;
+    }
+
+    private List<String> getImgSrc(String htmlStr) {
+        if( htmlStr == null ){
+
+            return null;
+        }
+
+        String img = "";
+        Pattern p_image;
+        Matcher m_image;
+        List<String> pics = new ArrayList<String>();
+
+        String regEx_img = "<img.*src\\s*=\\s*(.*?)[^>]*?>";
+        p_image = Pattern.compile(regEx_img, Pattern.CASE_INSENSITIVE);
+        m_image = p_image.matcher(htmlStr);
+        while (m_image.find()) {
+            img = img + "," + m_image.group();
+            // Matcher m =
+            // Pattern.compile ( "src = \" (*) (\ "|> | \\ s +)"?.?) Matcher (img);. // src match
+            Matcher m = Pattern.compile("src\\s*=\\s*\"?(.*?)(\"|>|\\s+)").matcher(img);
+
+            while (m.find()) {
+                pics.add(m.group(1));
+            }
+        }
+        return pics;
     }
 }
