@@ -32,7 +32,7 @@ public class FileUploadController {
 
     @PostMapping("/upload")
     @ResponseBody
-    public Map<String, Object> handleFileUpload(@RequestParam("upload") MultipartFile file) throws IOException {
+    public Map<String, Object> handleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
         HashMap<String, Object> map = new HashMap<>();
         FileDB fileDB = storageService.store(file);
         map.put("file", fileDB);
@@ -45,5 +45,14 @@ public class FileUploadController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB.getName() + "\"")
                 .body(fileDB.getData());
+    }
+
+    @PostMapping("/files/{id}")
+    @ResponseBody
+    public Map<String, String> deleteFile(@PathVariable String id) {
+        storageService.deleteFile(id);
+        HashMap<String, String> map = new HashMap<>();
+        map.put("message", "Deleted");
+        return map;
     }
 }

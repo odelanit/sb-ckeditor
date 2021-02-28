@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "posts")
@@ -22,8 +23,9 @@ public class Post {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateField;
 
-    @ManyToOne
-    private FileDB fileDB;
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinTable(name = "post_file", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "file_id"))
+    private Set<FileDB> files;
 
     @Column(columnDefinition = "TEXT")
     private String editorField;
@@ -67,6 +69,14 @@ public class Post {
         this.dateField = dateField;
     }
 
+    public Set<FileDB> getFiles() {
+        return files;
+    }
+
+    public void setFiles(Set<FileDB> files) {
+        this.files = files;
+    }
+
     public String getEditorField() {
         return editorField;
     }
@@ -89,13 +99,5 @@ public class Post {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public FileDB getFileDB() {
-        return fileDB;
-    }
-
-    public void setFileDB(FileDB fileDB) {
-        this.fileDB = fileDB;
     }
 }

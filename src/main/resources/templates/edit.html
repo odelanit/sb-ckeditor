@@ -5,6 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Edit post</title>
     <link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/assets/dropzone/dropzone.min.css}" rel="stylesheet">
+    <link th:href="@{/assets/dropzone/basic.css}" rel="stylesheet">
     <link th:href="@{/assets/css/styles.css}" rel="stylesheet">
     <meta name="_csrf" th:content="${_csrf.token}">
 </head>
@@ -30,7 +32,7 @@
     <div class="row">
         <div class="col-12">
             <h4 class="text-center">Edit post</h4>
-            <form th:action="@{/edit/{id}(id=${post.id})}" th:object="${post}" method="post">
+            <form th:action="@{/edit/{id}(id=${post.id})}" th:object="${post}" method="post" id="form">
                 <div class="form-group">
                     <label>Integer field</label>
                     <input type="number" th:field="*{integerField}" class="form-control">
@@ -45,8 +47,9 @@
                 </div>
                 <div class="form-group">
                     <label>File field</label>
-                    <input type="file" class="form-control" id="file">
-                    <input type="hidden" th:field="*{fileDB}" class="form-control" id="file-id">
+                    <div class="dropzone" id="files-dropzone">
+                    </div>
+                    <select th:field="*{files}" style="display: none" multiple id="files"></select>
                 </div>
                 <div class="form-group">
                     <label>Editor field</label>
@@ -62,9 +65,13 @@
 </div>
 <script th:src="@{/assets/jquery/jquery.min.js}"></script>
 <script th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/dropzone/dropzone.min.js}"></script>
 <script th:src="@{/assets/ckeditor/ckeditor.js}"></script>
 <script>
     var _token = $('meta[name="_csrf"]').attr('content');
+    var files = [];
+
+    Dropzone.autoDiscover = false;
     ClassicEditor.create(document.querySelector("#editor"), {
         ckfinder: {
             uploadUrl: `/editor-upload?_csrf=${_token}`,
@@ -115,24 +122,48 @@
             console.error(error.stack)
         })
 
-    $("#file").on('change', function (e) {
-        if (e.target.files && e.target.files[0]) {
-            var formData = new FormData()
-            formData.append('upload', e.target.files[0])
-            formData.append('_csrf', _token);
+    let portfolioDropzone = new Dropzone('#files-dropzone', {
+        url: `/upload?_csrf=${_token}`,
+        addRemoveLinks: true,
+        timeout: 300000,
+        maxFilesize: 1024,
+        init: function () {
+            myDropzone = this;
+            this.on('success', function (file, response) {
+                files.push(response.file.id)
+            })
             $.ajax({
-                type: 'POST',
-                url: "/upload",
-                data: formData,
-                contentType: false,
-                processData: false,
-                timeout: 60000,
-                success: function (data) {
-                    $('#file-id').val(data.file.id)
-                    console.log($('#file-id').val())
+                url: `${window.location.href}/files`,
+                success: function (response) {
+                    response.forEach(df => {
+                        let mockFile = {name: df.name};
+                        files.push(df.id);
+                        myDropzone.emit("addedfile", mockFile);
+                        myDropzone.emit("thumbnail", mockFile, '/files/' + df.id);
+                        myDropzone.emit("complete", mockFile);
+                    })
                 }
             })
-        }
+        },
+        removedfile: function (file) {
+            var data = JSON.parse(file.xhr.responseText)
+            $.ajax({
+                type: 'POST',
+                url: `/files/${data.file.id}?_csrf=${_token}`,
+            });
+            var index = files.findIndex(f => f == data.file.id)
+            if (index >= 0) files.splice(index, 1);
+            let _ref;
+            return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+        },
+    })
+
+    $('#form').on('submit', function (e) {
+        $('#files').html('');
+        files.forEach(fileId => {
+            var html = `<option selected>${fileId}</option>`
+            $('#files').append(html)
+        });
     })
 </script>
 </body>

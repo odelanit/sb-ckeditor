@@ -26,11 +26,15 @@ public class FileStorageService {
         return fileDBRepository.findById(id).get();
     }
 
+    public void deleteFile(String id) {
+        fileDBRepository.deleteById(id);
+    }
+
     public Stream<FileDB> getAllFiles() {
         return fileDBRepository.findAll().stream();
     }
 
     public void init() {
-        fileDBRepository.deleteAll();
+//        fileDBRepository.deleteAll();
     }
 }

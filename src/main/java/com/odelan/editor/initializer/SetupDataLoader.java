@@ -51,7 +51,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             userRepository.save(user);
         }
 
-        postRepository.deleteAll();
+//        postRepository.deleteAll();
 
         alreadySetup = true;
     }

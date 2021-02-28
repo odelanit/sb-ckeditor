@@ -39,7 +39,7 @@
                         <th>Integer field</th>
                         <th>String field</th>
                         <th>Date field</th>
-                        <th>File field</th>
+                        <th>Files</th>
                         <th>Created At</th>
                         <th>Updated At</th>
                         <th></th>
@@ -51,12 +51,17 @@
                         <td th:text="${post.integerField}"></td>
                         <td th:text="${post.stringField}"></td>
                         <td th:text="${post.dateField}"></td>
-                        <td th:text="${post.fileDB != null ? post.fileDB.name : ''}"></td>
+                        <td th:if="${post.files != null}">
+                            <a th:each="file : ${post.files}" th:href="@{/files/{id}(id=${file.id})}" th:text="${file.name}" class="btn btn-link"></a>
+                        </td>
                         <td th:text="${post.createdAt}"></td>
                         <td th:text="${post.updatedAt}"></td>
                         <td>
                             <a th:href="@{/show/{id}(id=${post.id})}">Show</a> |
-                            <a th:href="@{/edit/{id}(id=${post.id})}">Edit</a>
+                            <a th:href="@{/edit/{id}(id=${post.id})}">Edit</a> |
+                            <form th:action="@{/delete/{id}(id=${post.id})}" method="post" class="delete-form d-inline">
+                                <a href="javascript:void(0);" class="delete" data-toggle="modal" data-target="#confirmDelete">Delete</a>
+                            </form>
                         </td>
                     </tr>
                     </tbody>
@@ -65,7 +70,35 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="confirmDelete">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <div class="modal-title">
+                    Delete
+                </div>
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                Are you sure to delete?
+            </div>
+            <div class="modal-footer text-right">
+                <button class="btn btn-primary" id="confirm">Yes</button>
+                <button class="btn btn-secondary" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script th:src="@{/assets/jquery/jquery.min.js}"></script>
 <script th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script>
+    $('#confirmDelete').on('show.bs.modal', function (e) {
+        var form = $(e.relatedTarget).closest('form');
+        $(this).find('.modal-footer #confirm').data('form', form);
+    });
+    $('#confirmDelete').find('.modal-footer #confirm').on('click', function(){
+        $(this).data('form').submit();
+    });
+</script>
 </body>
 </html>

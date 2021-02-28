@@ -23,10 +23,17 @@
 <div class="container py-4">
     <div class="row">
         <div class="col">
+            <a href="/">Back to list</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
             <div th:text="${post.integerField}" class="mb-4"></div>
             <div th:text="${post.stringField}" class="mb-4"></div>
             <div th:text="${post.dateField}" class="mb-4"></div>
-            <div th:text="${post.fileDB != null ? post.fileDB.name : ''}" class="mb-4"></div>
+            <div th:if="${post.files != null}" class="mb-4">
+                <a th:each="file : ${post.files}" th:href="@{/files/{id}(id=${file.id})}" th:text="${file.name}"></a>
+            </div>
             <div th:utext="${post.editorField}" class="mb-4"></div>
         </div>
     </div>

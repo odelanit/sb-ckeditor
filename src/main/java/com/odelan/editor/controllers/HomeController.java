@@ -1,14 +1,14 @@
 package com.odelan.editor.controllers;
 
+import com.odelan.editor.models.FileDB;
 import com.odelan.editor.models.Post;
 import com.odelan.editor.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
 
 @Controller
 public class HomeController {
@@ -55,5 +55,18 @@ public class HomeController {
         Post post = postRepository.findById(id).get();
         model.addAttribute(post);
         return "show";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        postRepository.deleteById(id);
+        return "redirect:/";
+    }
+
+    @GetMapping("/edit/{id}/files")
+    @ResponseBody
+    public Set<FileDB> getAllFiles(@PathVariable Long id) {
+        Post post = postRepository.findById(id).get();
+        return post.getFiles();
     }
 }
