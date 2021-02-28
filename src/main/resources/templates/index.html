@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/assets/css/styles.css}" rel="stylesheet">
+    <meta name="_csrf" th:content="${_csrf.token}">
 </head>
 <body>
 <header>
@@ -57,8 +58,50 @@
 <script th:src="@{/assets/js/bootstrap.min.js}"></script>
 <script th:src="@{/assets/ckeditor/ckeditor.js}"></script>
 <script>
+    var _token = $('meta[name="_csrf"]').attr('content');
+    console.log(_token)
     ClassicEditor.create(document.querySelector("#editor"), {
-        toolbar: ['bold', 'italic', 'link', 'undo', 'redo', 'numberedList', 'bulletedList']
+        ckfinder: {
+            uploadUrl: `/upload?_csrf=${_token}`,
+        },
+        toolbar: {
+            items: [
+                'heading',
+                '|',
+                'bold',
+                'italic',
+                'link',
+                'bulletedList',
+                'numberedList',
+                '|',
+                'alignment',
+                'indent',
+                'outdent',
+                '|',
+                'imageUpload',
+                'blockQuote',
+                'codeBlock',
+                'insertTable',
+                'mediaEmbed',
+                'undo',
+                'redo'
+            ]
+        },
+        language: 'en',
+        image: {
+            toolbar: [
+                'imageTextAlternative',
+                'imageStyle:full',
+                'imageStyle:side'
+            ]
+        },
+        table: {
+            contentToolbar: [
+                'tableColumn',
+                'tableRow',
+                'mergeTableCells'
+            ]
+        },
     })
         .then(editor => {
             console.log('Editor was initialized', editor)
