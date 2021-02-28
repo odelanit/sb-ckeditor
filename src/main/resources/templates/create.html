@@ -21,7 +21,7 @@
         </div>
     </nav>
 </header>
-<div class="container py-5">
+<div class="container py-4">
     <div class="row">
         <div class="col">
             <a href="/">Back to list</a>
@@ -128,7 +128,7 @@
                 processData: false,
                 timeout: 60000,
                 success: function (data) {
-                    $('#file-id').val(data.id)
+                    $('#file-id').val(data.file.id)
                 }
             })
         }

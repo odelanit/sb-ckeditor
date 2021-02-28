@@ -20,7 +20,7 @@
         </div>
     </nav>
 </header>
-<div class="container py-5">
+<div class="container py-4">
     <div class="row">
         <div class="col-12">
             <div class="table-responsive">
@@ -55,6 +55,7 @@
                         <td th:text="${post.createdAt}"></td>
                         <td th:text="${post.updatedAt}"></td>
                         <td>
+                            <a th:href="@{/show/{id}(id=${post.id})}">Show</a> |
                             <a th:href="@{/edit/{id}(id=${post.id})}">Edit</a>
                         </td>
                     </tr>

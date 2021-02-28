@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Optional;
-
 @Controller
 public class HomeController {
     @Autowired
@@ -34,7 +32,7 @@ public class HomeController {
         postRepository.save(post);
 
         model.addAttribute("post", post);
-        return "create";
+        return "redirect:/";
     }
 
     @GetMapping("/edit/{id}")
@@ -50,5 +48,12 @@ public class HomeController {
 
         model.addAttribute(post);
         return "redirect:/";
+    }
+
+    @GetMapping("/show/{id}")
+    public String show(@PathVariable Long id, Model model) {
+        Post post = postRepository.findById(id).get();
+        model.addAttribute(post);
+        return "show";
     }
 }
