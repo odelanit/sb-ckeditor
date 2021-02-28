@@ -35,13 +35,25 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Integer field</th>
-                        <th>String field</th>
-                        <th>Date field</th>
+                        <th>
+                            <a th:href="@{'?sf=id&sd=' + ${reverseSortDir}}">ID</a>
+                        </th>
+                        <th>
+                            <a th:href="@{'?sf=integerField&sd=' + ${reverseSortDir}}">Integer field</a>
+                        </th>
+                        <th>
+                            <a th:href="@{'?sf=stringField&sd=' + ${reverseSortDir}}">String field</a>
+                        </th>
+                        <th>
+                            <a th:href="@{'?sf=dateField&sd=' + ${reverseSortDir}}">Date field</a>
+                        </th>
                         <th>Files</th>
-                        <th>Created At</th>
-                        <th>Updated At</th>
+                        <th>
+                            <a th:href="@{'?sf=createdAt&sd=' + ${reverseSortDir}}">Created At</a>
+                        </th>
+                        <th>
+                            <a th:href="@{'?sf=updatedAt&sd=' + ${reverseSortDir}}">Updated At</a>
+                        </th>
                         <th></th>
                     </tr>
                     </thead>

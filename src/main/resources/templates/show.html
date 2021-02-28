@@ -32,7 +32,7 @@
             <div th:text="${post.stringField}" class="mb-4"></div>
             <div th:text="${post.dateField}" class="mb-4"></div>
             <div th:if="${post.files != null}" class="mb-4">
-                <a th:each="file : ${post.files}" th:href="@{/files/{id}(id=${file.id})}" th:text="${file.name}"></a>
+                <a th:each="file : ${post.files}" th:href="@{/files/{id}(id=${file.id})}" th:text="${file.name}" class="btn btn-link"></a>
             </div>
             <div th:utext="${post.editorField}" class="mb-4"></div>
         </div>

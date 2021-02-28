@@ -4,6 +4,7 @@ import com.odelan.editor.models.FileDB;
 import com.odelan.editor.models.Post;
 import com.odelan.editor.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +17,22 @@ public class HomeController {
     protected PostRepository postRepository;
 
     @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("posts", postRepository.findAll());
+    public String index(@RequestParam(value = "sf", required = false) String sortField, @RequestParam(value = "sd", required = false) String sortDir, Model model) {
+        if (sortField == null) sortField = "id";
+
+        Sort.Direction direction;
+        String reverseDir;
+        if (sortDir == null) {
+            direction = Sort.Direction.ASC;
+            reverseDir = "desc";
+        } else {
+            direction = sortDir.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+            reverseDir = sortDir.equals("asc") ? "desc" : "asc";
+        }
+
+        model.addAttribute("posts", postRepository.findAll(Sort.by(direction, sortField)));
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", reverseDir);
         return "index";
     }
 
