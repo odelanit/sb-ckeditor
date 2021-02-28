@@ -96,6 +96,7 @@ public class HomeController {
         Post post = postRepository.findById(id).get();
         FileDB fileDB = fileDBRepository.findById(fileId).get();
         post.removeFileDB(fileDB);
+        fileDBRepository.deleteById(fileId);
         HashMap<String, String> map = new HashMap<>();
         map.put("message", "Deleted");
         return map;
