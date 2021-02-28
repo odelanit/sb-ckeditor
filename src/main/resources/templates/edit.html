@@ -142,7 +142,7 @@
                         };
                         files.push(df.id);
                         myDropzone.emit("addedfile", mockFile);
-                        myDropzone.emit("thumbnail", mockFile, '/files/' + df.id);
+                        if (df.type.includes('image')) myDropzone.emit("thumbnail", mockFile, '/files/' + df.id);
                         myDropzone.emit("complete", mockFile);
                     })
                 }
