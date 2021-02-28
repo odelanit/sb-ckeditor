@@ -152,7 +152,7 @@
             var fileId = file.id || JSON.parse(file.xhr.responseText)
             $.ajax({
                 type: 'POST',
-                url: `/files/${fileId}?_csrf=${_token}`,
+                url: `${window.location.href}/files/${fileId}?_csrf=${_token}`,
             });
             var index = files.findIndex(f => f == fileId)
             if (index >= 0) files.splice(index, 1);

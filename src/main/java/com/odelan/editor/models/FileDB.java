@@ -24,7 +24,7 @@ public class FileDB {
     @Lob
     private byte[] data;
 
-    @ManyToMany(mappedBy = "files")
+    @ManyToMany(mappedBy = "files", cascade = CascadeType.PERSIST)
     @JsonIgnore
     private Set<Post> posts;
 

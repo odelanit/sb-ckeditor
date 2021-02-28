@@ -100,4 +100,9 @@ public class Post {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    public void removeFileDB(FileDB fileDB) {
+        files.remove(fileDB);
+        fileDB.getPosts().remove(this);
+    }
 }

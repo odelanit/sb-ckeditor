@@ -2,6 +2,7 @@ package com.odelan.editor.controllers;
 
 import com.odelan.editor.models.FileDB;
 import com.odelan.editor.models.Post;
+import com.odelan.editor.repository.FileDBRepository;
 import com.odelan.editor.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -9,12 +10,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Set;
 
 @Controller
 public class HomeController {
     @Autowired
     protected PostRepository postRepository;
+
+    @Autowired
+    protected FileDBRepository fileDBRepository;
 
     @GetMapping("/")
     public String index(@RequestParam(value = "sf", required = false) String sortField, @RequestParam(value = "sd", required = false) String sortDir, Model model) {
@@ -83,5 +88,16 @@ public class HomeController {
     public Set<FileDB> getAllFiles(@PathVariable Long id) {
         Post post = postRepository.findById(id).get();
         return post.getFiles();
+    }
+
+    @PostMapping("/edit/{id}/files/{fileId}")
+    @ResponseBody
+    public HashMap<String, String> getAllFiles(@PathVariable Long id, @PathVariable String fileId) {
+        Post post = postRepository.findById(id).get();
+        FileDB fileDB = fileDBRepository.findById(fileId).get();
+        post.removeFileDB(fileDB);
+        HashMap<String, String> map = new HashMap<>();
+        map.put("message", "Deleted");
+        return map;
     }
 }
